@@ -51,6 +51,20 @@ export class App extends Component {
       name.toLowerCase().includes(normalizedValue)
     );
   };
+  componentDidMount() {
+    const contacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(contacts);
+
+    if (parsedContacts) {
+      this.setState({ contacts: parsedContacts });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   render() {
     const { filter } = this.state;
@@ -58,7 +72,6 @@ export class App extends Component {
       <>
         <h1>Phonebook</h1>
         <ContactForm handleSubmit={this.handleSubmit} />
-
         <h2>Contacts</h2>
         <Filter value={filter} handleChange={this.handleChange} />
         <ContactList
